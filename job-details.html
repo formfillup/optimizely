@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Job Details — Optimizely</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo-link" aria-label="Optimizely home">
+      <img src="assets/optimizely-logo.png" alt="Optimizely" />
+    </a>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="jobs.html" aria-current="page">Open Positions</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="jobs.html" class="btn btn-primary btn-sm"><span class="full">View</span> Jobs</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="header-spacer"></div>
+
+<main>
+  <section class="details-hero">
+    <div class="container">
+      <a href="jobs.html" class="back-link">&larr; Back to all positions</a>
+      <div id="job-details-root">
+        <!-- Filled by JS -->
+        <p>Loading job details…</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-logo">
+        <img src="assets/optimizely-logo.png" alt="Optimizely" />
+        <p style="max-width:280px; color:rgba(207,231,190,0.8); font-size:0.9rem;">Helping great people find their next opportunity.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="jobs.html">Open Positions</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:hr.optimizely@gmail.com">hr.optimizely@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Optimizely. All rights reserved.</span>
+      <span>Built for people who are ready for what's next.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/jobs-data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  (function renderJobDetails() {
+    const root = document.getElementById("job-details-root");
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const job = JOBS.find((j) => j.id === id) || JOBS.find((j) => j.status === "open");
+
+    if (!job) {
+      root.innerHTML = `
+        <div class="details-card">
+          <h1>Job not found</h1>
+          <p>We couldn't find the position you were looking for. It may have been removed.</p>
+          <a href="jobs.html" class="btn btn-primary">View all positions</a>
+        </div>
+      `;
+      return;
+    }
+
+    document.title = job.title + " — Optimizely";
+
+    const isOpen = job.status === "open";
+    const statusPill = isOpen
+      ? `<span class="pill pill-green">Open</span>`
+      : `<span class="pill pill-dark">Closed</span>`;
+
+    const listOrFallback = (items, fallbackText) => {
+      if (!items || !items.length) return `<p>${fallbackText}</p>`;
+      return `<ul>${items.map((i) => `<li>${escapeHtml(i)}</li>`).join("")}</ul>`;
+    };
+
+    root.innerHTML = `
+      <div class="details-card">
+        <div class="job-meta">
+          ${statusPill}
+          <span class="pill pill-muted">${escapeHtml(job.type)}</span>
+          <span class="pill pill-muted">${escapeHtml(job.experience)}</span>
+        </div>
+        <h1>${escapeHtml(job.title)}</h1>
+        <div class="job-meta" style="margin-bottom: 6px;">
+          ${job.candidatePreference && job.candidatePreference !== "Not specified" ? `<span class="pill pill-muted">${escapeHtml(job.candidatePreference)}</span>` : ""}
+          ${job.eligibility && job.eligibility !== "Not specified" ? `<span class="pill pill-muted">${escapeHtml(job.eligibility)}</span>` : ""}
+        </div>
+
+        <div class="details-block">
+          <h2>Job Description</h2>
+          <p>${escapeHtml(job.description)}</p>
+        </div>
+
+        <div class="details-block">
+          <h2>Responsibilities</h2>
+          ${listOrFallback(job.responsibilities, "Not specified in the job posting.")}
+        </div>
+
+        <div class="details-block">
+          <h2>Requirements</h2>
+          ${listOrFallback(job.requirements, "Not specified in the job posting.")}
+        </div>
+
+        <div class="details-block">
+          <h2>Preferred Qualifications</h2>
+          ${listOrFallback(job.preferredQualifications, "Not specified in the job posting.")}
+        </div>
+
+        <div class="details-block">
+          <h2>Application Instructions</h2>
+          <p>${escapeHtml(job.applicationInstructions)}</p>
+        </div>
+
+        ${
+          isOpen
+            ? `<div class="details-apply">
+                <a href="apply.html?id=${encodeURIComponent(job.id)}" class="btn btn-primary">Apply Now</a>
+                <span style="color:var(--ink-soft); font-size:0.9rem;">Takes about 5 minutes</span>
+              </div>`
+            : `<div class="closed-banner">This position is closed and no longer accepting applications. Check our <a href="jobs.html" style="color:var(--green-bright); text-decoration:underline;">open positions</a> for current openings.</div>`
+        }
+      </div>
+    `;
+  })();
+</script>
+</body>
+</html>
