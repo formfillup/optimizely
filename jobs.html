@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Open Positions — Optimizely</title>
+<meta name="description" content="Browse all open and closed positions at Optimizely." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo-link" aria-label="Optimizely home">
+      <img src="assets/optimizely-logo.png" alt="Optimizely" />
+    </a>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="jobs.html" aria-current="page">Open Positions</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="jobs.html" class="btn btn-primary btn-sm"><span class="full">View</span> Jobs</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="header-spacer"></div>
+
+<main>
+
+  <section class="hero grid-bg" style="padding:60px 0 40px;">
+    <span class="ring ring-a"></span>
+    <span class="ring ring-c"></span>
+    <div class="container">
+      <div class="hero-inner">
+        <span class="eyebrow-badge">Careers at Optimizely</span>
+        <h1 style="font-size:clamp(2.2rem, 5vw, 3.4rem);">All <span class="accent">Positions</span></h1>
+        <p class="lead">Browse everything we're currently hiring for, plus roles that have recently closed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="open">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="tag">Hiring now</span>
+          <h2>Open Positions</h2>
+          <p>These roles are actively accepting applications. Apply directly online.</p>
+        </div>
+      </div>
+      <div class="job-grid" data-jobs-open></div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="closed">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="tag">Archive</span>
+          <h2>Closed Positions</h2>
+          <p>These roles are no longer accepting applications, but you can still view their details.</p>
+        </div>
+      </div>
+      <div class="job-grid" data-jobs-closed></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-logo">
+        <img src="assets/optimizely-logo.png" alt="Optimizely" />
+        <p style="max-width:280px; color:rgba(207,231,190,0.8); font-size:0.9rem;">Helping great people find their next opportunity.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="jobs.html">Open Positions</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:hr.optimizely@gmail.com">hr.optimizely@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Optimizely. All rights reserved.</span>
+      <span>Built for people who are ready for what's next.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/jobs-data.js"></script>
+<script src="js/main.js"></script>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
