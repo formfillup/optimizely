@@ -424,6 +424,98 @@ textarea:focus-visible {
   .hero-photo::after { height: 110px; }
 }
 
+/* ----------------------------------------------------------
+   Hero — mobile-only fixes (photo hero on the homepage)
+   Scoped entirely to .hero-photo descendants so the plain
+   .hero used on jobs.html, and all desktop styling above,
+   stay exactly as they are. Placed after the existing hero
+   breakpoints above so it wins the cascade at these widths.
+   ---------------------------------------------------------- */
+@media (max-width: 768px) {
+
+  /* 1. Image framing — the 68% desktop anchor is tuned for a
+     wide/short crop. On a narrow/tall viewport that same
+     anchor shifts the visible window too far right, clipping
+     hair on one side and leaving empty sky/ocean on the other.
+     55% re-centers the crop on the subject. */
+  .hero-photo {
+    background-position: 55% center;
+    min-height: 600px;
+    padding: 100px 0 32px;
+  }
+
+  /* Soft top/bottom scrim so the badge/heading and the button
+     row stay legible over any part of the photo — it's fully
+     transparent through the middle band, where the face sits,
+     so the person underneath is never hidden. */
+  .hero-photo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(11, 42, 27, 0.42) 0%,
+      rgba(11, 42, 27, 0) 26%,
+      rgba(11, 42, 27, 0) 56%,
+      rgba(11, 42, 27, 0.8) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-photo-layout { gap: 20px; }
+
+  .hero-photo .hero-giant-title-wrap { padding: 0 4px; }
+
+  .hero-photo .hero-giant-title {
+    font-size: clamp(1.8rem, 9vw, 2.6rem);
+    text-shadow:
+      2px 2px 0 #6FAE2C,
+      3px 3px 0 #58941F,
+      4px 4px 0 #427A17,
+      5px 5px 0 var(--ink);
+  }
+
+  /* 2 & 3. Buttons + text — stack full-width, centered, no
+     overflow, tighter/legible spacing. */
+  .hero-photo .hero-inner {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .hero-photo .eyebrow-badge { margin-bottom: 16px; }
+
+  .hero-photo p.lead {
+    font-size: 0.98rem;
+    max-width: 340px;
+    margin: 0 auto 24px;
+  }
+
+  .hero-photo .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .hero-photo .hero-ctas .btn {
+    width: 100%;
+  }
+
+  .hero-photo .stat-strip {
+    justify-content: center;
+    text-align: center;
+    gap: 22px;
+    margin-top: 24px;
+  }
+}
+
+/* Extra headroom on very small phones */
+@media (max-width: 380px) {
+  .hero-photo { min-height: 560px; padding: 90px 0 28px; }
+  .hero-photo .hero-giant-title { font-size: clamp(1.6rem, 10vw, 2.1rem); }
+  .hero-photo p.lead { max-width: 280px; }
+}
+
 .hero-photo p.lead {
   color: #FFFFFF;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
