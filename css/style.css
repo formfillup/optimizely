@@ -430,45 +430,59 @@ textarea:focus-visible {
    .hero used on jobs.html, and all desktop styling above,
    stay exactly as they are. Placed after the existing hero
    breakpoints above so it wins the cascade at these widths.
+
+   The photo itself is never vertically cropped on a narrow
+   viewport (background-size: cover on a tall/narrow box scales
+   to fill the WIDTH, so the full height — and the full subject,
+   head to chest — is always visible; only the sides get
+   trimmed). So the previous mobile pass was covering her face
+   with text/buttons, not an image crop. The real fix is a
+   height budget: keep the title block short and pinned to the
+   top, keep the badge/lead/button block short and pinned to
+   the bottom, and give the section enough min-height that the
+   natural space in between (where flex's space-between puts
+   the gap) lands on the face instead of getting squeezed away.
    ---------------------------------------------------------- */
 @media (max-width: 768px) {
 
-  /* 1. Image framing — the 68% desktop anchor is tuned for a
-     wide/short crop. On a narrow/tall viewport that same
-     anchor shifts the visible window too far right, clipping
-     hair on one side and leaving empty sky/ocean on the other.
-     55% re-centers the crop on the subject. */
+  /* 1. Image framing — recenter horizontally (the subject sits
+     dead-center in the source photo; the desktop 68% anchor is
+     tuned for a wide/short crop and shifts too far right here).
+     The height budget below is what actually keeps the face
+     uncovered vertically. */
   .hero-photo {
-    background-position: 55% center;
-    min-height: 600px;
-    padding: 100px 0 32px;
+    background-position: center center;
+    min-height: 700px;
+    padding: 84px 0 28px;
   }
 
-  /* Soft top/bottom scrim so the badge/heading and the button
-     row stay legible over any part of the photo — it's fully
-     transparent through the middle band, where the face sits,
-     so the person underneath is never hidden. */
+  /* Scrim only over the top strip (behind the title) and the
+     bottom strip (behind badge/text/button) — fully transparent
+     from ~22% to ~62% of the section, which is where her face
+     sits, so nothing ever dims or hides it. */
   .hero-photo::before {
     content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(11, 42, 27, 0.42) 0%,
-      rgba(11, 42, 27, 0) 26%,
-      rgba(11, 42, 27, 0) 56%,
-      rgba(11, 42, 27, 0.8) 100%
+      rgba(11, 42, 27, 0.32) 0%,
+      rgba(11, 42, 27, 0) 22%,
+      rgba(11, 42, 27, 0) 62%,
+      rgba(11, 42, 27, 0.75) 100%
     );
     z-index: 1;
     pointer-events: none;
   }
 
-  .hero-photo-layout { gap: 20px; }
+  /* Keep this as a floor only — the real spacing comes from
+     space-between once both blocks are short enough. */
+  .hero-photo-layout { gap: 16px; }
 
-  .hero-photo .hero-giant-title-wrap { padding: 0 4px; }
+  .hero-photo .hero-giant-title-wrap { padding: 0 6px; }
 
   .hero-photo .hero-giant-title {
-    font-size: clamp(1.8rem, 9vw, 2.6rem);
+    font-size: clamp(1.6rem, 8.5vw, 2.3rem);
     text-shadow:
       2px 2px 0 #6FAE2C,
       3px 3px 0 #58941F,
@@ -476,44 +490,73 @@ textarea:focus-visible {
       5px 5px 0 var(--ink);
   }
 
-  /* 2 & 3. Buttons + text — stack full-width, centered, no
-     overflow, tighter/legible spacing. */
   .hero-photo .hero-inner {
     max-width: 100%;
     text-align: center;
   }
 
-  .hero-photo .eyebrow-badge { margin-bottom: 16px; }
+  /* Small tag instead of the full-size badge — keeps the block
+     pinned low, right below her chin, over the neck/collar. */
+  .hero-photo .eyebrow-badge {
+    font-size: 0.72rem;
+    padding: 5px 14px;
+    margin-bottom: 10px;
+  }
 
+  /* 3. Text sits between chin and button — short and centered
+     so it reads as one clean block over the sweater, not a
+     wall of copy climbing back up toward her face. */
   .hero-photo p.lead {
-    font-size: 0.98rem;
-    max-width: 340px;
-    margin: 0 auto 24px;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    max-width: 250px;
+    margin: 0 auto 14px;
   }
 
+  /* 2. CTA — auto-width and noticeably smaller, sitting low
+     over the chest/sweater instead of stretched full-bleed
+     across the middle of the photo. The secondary action is
+     demoted to a plain underlined link so only one small pill
+     competes for space. */
   .hero-photo .hero-ctas {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .hero-photo .hero-ctas .btn {
-    width: 100%;
-  }
-
-  .hero-photo .stat-strip {
+    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
-    text-align: center;
-    gap: 22px;
-    margin-top: 24px;
+    align-items: center;
+    gap: 8px 18px;
   }
+
+  .hero-photo .hero-ctas .btn-primary {
+    padding: 9px 20px;
+    font-size: 0.82rem;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  .hero-photo .hero-ctas .btn-outline {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: #FFFFFF;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 4px 2px;
+    font-size: 0.8rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Stats move below the photo in normal page flow on mobile —
+     there isn't room to keep them over the image without either
+     crowding the button or creeping back up over the face, and
+     the same "remote/fresher friendly" points are repeated in
+     the About section further down the page. */
+  .hero-photo .stat-strip { display: none; }
 }
 
 /* Extra headroom on very small phones */
 @media (max-width: 380px) {
-  .hero-photo { min-height: 560px; padding: 90px 0 28px; }
-  .hero-photo .hero-giant-title { font-size: clamp(1.6rem, 10vw, 2.1rem); }
-  .hero-photo p.lead { max-width: 280px; }
+  .hero-photo { min-height: 660px; padding: 76px 0 24px; }
+  .hero-photo .hero-giant-title { font-size: clamp(1.45rem, 9.5vw, 2rem); }
+  .hero-photo p.lead { max-width: 220px; }
 }
 
 .hero-photo p.lead {
