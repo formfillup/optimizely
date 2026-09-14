@@ -475,9 +475,25 @@ textarea:focus-visible {
     pointer-events: none;
   }
 
-  /* Keep this as a floor only — the real spacing comes from
-     space-between once both blocks are short enough. */
-  .hero-photo-layout { gap: 16px; }
+  /* THE ACTUAL FIX: .hero-photo-layout has `height: 100%` in the
+     base stylesheet, but percentage heights only resolve against
+     a parent with a *definite* height — .hero-photo only sets
+     min-height, so that 100% computes to `auto`. That means this
+     box was never filling the section; it was shrink-wrapping to
+     its own content (title + badge + text + buttons all crammed
+     together) and sitting at the top, while every bit of the
+     700px min-height piled up as dead space below it — exactly
+     the bug in the screenshot. flex-grow forces it to actually
+     stretch to the section's full height, so justify-content:
+     space-between has real room to push the title to the top and
+     the text/button block to the bottom, leaving the gap — where
+     her face is — in between. Everything below this line is
+     unchanged from before; this one property is what makes it
+     take effect. */
+  .hero-photo-layout {
+    flex-grow: 1;
+    gap: 16px;
+  }
 
   .hero-photo .hero-giant-title-wrap { padding: 0 6px; }
 
